@@ -126,6 +126,10 @@ func main() {
 	keyPath := flag.String("tls-key-path", "", "path to the tls key file (for websockets")
 	useLogger := flag.Bool("logger", false, "write logs to file")
 	headless := flag.Bool("headless", false, "run without chat UI")
+	addr:= flag.String("addr", "0.0.0.0", "Listening address")
+	port := flag.Int("port", 9095, "Listening port")
+
+
 
 	var addrsToConnectTo stringSlice
 	flag.Var(&addrsToConnectTo, "connect", "address to connect to (can be used multiple times)")
@@ -173,7 +177,7 @@ func main() {
 		libp2p.Identity(privk),
 		libp2p.Transport(quicTransport.NewTransport),
 		libp2p.Transport(webtransport.New),
-		libp2p.ListenAddrStrings("/ip4/0.0.0.0/udp/9095/quic-v1", "/ip4/0.0.0.0/udp/9095/quic-v1/webtransport"),
+		libp2p.ListenAddrStrings(fmt.Sprintf("/ip4/%s/udp/%d/quic-v1", *addr, *port), fmt.Sprintf("/ip4/%s/udp/%d/quic-v1/webtransport", *addr, *port)),
 	)
 
 	// create a new libp2p Host with lots of options
